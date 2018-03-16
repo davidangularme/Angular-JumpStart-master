@@ -1,0 +1,168 @@
+<div class="customers view indent" xmlns:float="http://www.w3.org/1999/xhtml">
+    <div class="container">
+
+
+
+
+      <button type="button" class="btn btn-primary" (click)="open()">Add a New Product</button>
+
+      <ngl-modal [header]=''  style="border-width: 10px;border-radius: 50px;box-shadow: 5px 10px;border-color: coral;" [(open)]="opened" [size]="size" [directional]="directional">
+<!--
+        <ngl-modal [header]="noHeader ? '' : 'Product To Add'" [(open)]="opened" [size]="size" [directional]="directional">
+   -->
+
+        <div body>
+          <ngl-notification type="toast" style="margin-left: auto;margin-right: auto;">
+            <div class="slds-grid">
+              <ngl-icon category="action" icon="info" size="small" class="slds-col slds-m-center--small slds-flex"></ngl-icon>
+              <div class="slds-col slds-align-middle">Product to Add</div>
+            </div>
+          </ngl-notification>
+          <br>
+          <br>
+          <br>
+
+            <form #f="ngForm" novalidate (ngSubmit)="save(f.value, f.valid)"  >
+              <div class="form-group">
+                <label>Product Name</label>
+                <input type="text" class="form-control"
+                       name="name" [(ngModel)]="user.name"
+                       #name="ngModel" required minlength="5">
+                <small [hidden]="name.valid || (name.pristine && !f.submitted)" class="text-danger">
+                  Product Name is required (minimum 5 characters).
+                </small>
+                <!--<pre>{{name.errors | json}}</pre>-->
+              </div>
+              <div ngModelGroup="address">
+                <div class="form-group">
+                  <label>Price</label>
+                  <input type="text" class="form-control"
+                         name="street" [(ngModel)]="user.address.street"
+                         #street="ngModel" required>
+                  <small [hidden]="street.valid || (street.pristine && !f.submitted)" class="text-danger">
+                    Price is required.
+                  </small>
+                </div>
+                <div class="form-group">
+                  <label>Image Upload</label>
+                 <!-- <input type="file" name="file"> -->
+                  <!--
+                  <input type="submit" value="Submit">
+                   -->
+                  <!--
+                  <input id="cin" name="cin" type="file" (change)="fileChangeEvent($event)" placeholder="Upload a file..." multiple/>
+                  // button
+                  <button type="button" class="btn btn-success btn-s" (click)="upload()">
+                    <i class="glyphicon glyphicon-open-file"></i>&nbsp;Upload
+                  </button>
+                  -->
+<!--
+                  <form-upload></form-upload>
+
+                  <br/>
+                  <br/>
+
+                  <list-upload></list-upload>
+                  -->
+
+                  <fancy-image-uploader [options]="options" style="height: 50px;width: 50px" (onUpload)="onUpload($event)"></fancy-image-uploader>
+
+
+                <!--  <input type="text" class="form-control"
+                         name="postcode" [(ngModel)]="user.address.postcode">
+                         -->
+                </div>
+              </div>
+
+              <ng-template ngl-modal-footer >
+                <button class="slds-m-button slds-button--neutral" (click)="cancel()">Cancel</button>
+                <button class="slds-m-button slds-button--brand" (click)="save(f.value, f.valid)">Save</button>
+              </ng-template>
+          <!--
+              <button type="submit" class="btn btn-primary" (click)="save()" style="float:right">Submit</button>
+              &nbsp;
+              <button class="btn btn-default" (click)="cancel()" style="float:right;margin-right: 30px;">Cancel</button>
+-->
+            </form>
+         <!--   <div class="margin-20">
+              <div>Form details:-</div>
+              <pre>Is form valid?: <br>{{f.valid | json}}</pre>
+              <pre>Is form submitted?: <br>{{f.submitted | json}}</pre>
+              <pre>form value: <br>{{f.value | json}}</pre>
+            </div> -->
+
+
+
+        </div>
+      <!--
+        <ng-template ngl-modal-footer *ngIf="!noFooter">
+          <button class="btn btn-default" (click)="cancel()">Cancel</button>
+          <button class="btn btn-primary">Save</button>
+        </ng-template>
+      -->
+      </ngl-modal>
+<!--
+      <ngl-form-checkbox label="Empty header" class="slds-m-top--small">
+        <input nglFormControl type="checkbox" [(ngModel)]="noHeader" />
+      </ngl-form-checkbox>
+      <ngl-form-checkbox label="Empty footer" class="slds-m-top--small">
+        <input nglFormControl type="checkbox" [(ngModel)]="noFooter" />
+      </ngl-form-checkbox>
+      <ngl-form-checkbox label="Directional footer" class="slds-m-top--small">
+        <input nglFormControl type="checkbox" [(ngModel)]="directional" [disabled]="noFooter" />
+      </ngl-form-checkbox>
+-->
+
+        <br />
+        <br />
+        <br />
+    <!--    <header>
+            <h3>
+                <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Products
+            </h3>
+        </header>
+        <br />
+        <div>
+          <a routerLink="/customers/0/edit">
+              <span class="glyphicon glyphicon-plus"></span> New Product
+          </a>
+        </div>
+      -->
+        <div class="container">
+            <div *ngIf="customers">
+
+                <div class="row" *ngFor="let customer of customers;trackBy:trackbyService.customer">
+                    <h4>{{ customer.firstName | capitalize }} {{ customer.lastName | capitalize }}</h4>
+                    <br />
+                    <table *ngIf="customer.orders && customer.orders.length" class="table table-striped table-hover orders-table">
+                        <tr *ngFor="let order of customer.orders;trackBy:trackbyService.order">
+                            <td>{{order.productName}}</td>
+                            <td>
+                              <ngl-avatar size="medium" type="circle" [src]='netImage' alt="avatar 2"></ngl-avatar>
+                            </td>
+                            <td class="text-right">{{ order.itemCost | currency:'USD':'symbol' }}</td>
+                        </tr>
+                        <tr class="summary-border">
+                            <td>&nbsp;</td>
+                            <td class="text-right">{{ customer.orderTotal | currency:'USD':'symbol' }}
+                        </tr>
+
+                    </table>
+                    <div *ngIf="!customer.orders || !customer.orders.length">
+                        No Product found
+                    </div>
+                </div>
+
+                <cm-pagination [hidden]="!customers"
+                    [totalItems]="totalRecords"
+                    [pageSize]="pageSize"
+                    (pageChanged)="pageChanged($event)"></cm-pagination>
+
+            </div>
+            <div *ngIf="!customers">
+                No customers found
+            </div>
+        </div>
+
+    </div>
+</div>

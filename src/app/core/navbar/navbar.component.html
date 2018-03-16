@@ -1,0 +1,25 @@
+<nav class="navbar navbar-primary bg-primary">
+    <div class="container">
+        <div class="navbar-header" style="">
+            <button type="button" class="navbar-toggle"
+                    (click)="isCollapsed = !isCollapsed">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" routerLink="/customers">
+                <img class=""  src="assets/images/rraddar.png">
+                <span class="text-uppercase" style="text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;color:white;"> Customer Position</span>
+            </a>
+            <span class="navbar-collapse" [attr.data-collapse]="isCollapsed">
+                <ul class="nav  nav-pills ">
+                    <li *ngIf="checkLoginLogout()" routerLinkActive="active"><a routerLink="/customers">Customers</a></li>
+                    <li *ngIf="checkLoginLogout()" routerLinkActive="active"><a routerLink="/orders">Products</a></li>
+                    <li *ngIf="checkLoginLogout()" routerLinkActive="active"><a routerLink="/about">Account Settings</a></li>
+                    <li *ngIf="checkLoginLogout()" routerLinkActive="active" (click)="loginOrOut()"><a>{{ loginLogoutText }}</a></li>
+                </ul>
+            </span>
+        </div>
+    </div>
+</nav>
